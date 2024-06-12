@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,22 +12,29 @@ public class PlayerController : MonoBehaviour
 
     public float moveSpeed;
     public float sprintSpeed;
+
+    public LayerMask enemyLayer;
+
     [SerializeField] private float rayLength;
     [SerializeField] private float attackRange;
+
+    private bool isInRange;
 
     private Plane groundPlane;
 
     private Ray camRay;
-    private Ray attackRay;
 
     private Vector3 pointToLook;
-    private Vector3 rangeOfAttack;
+    private Vector3 attackRangeOrigin;
+    private Vector3 directionOfAttack;
 
     // Start is called before the first frame update
     void Start()
     {
         playerCam = GameObject.Find("Main Camera").GetComponent<Camera>();
         player = GameObject.Find("Player");
+
+        enemyLayer = LayerMask.GetMask("Enemy");
     }
 
     // Update is called once per frame
@@ -45,10 +53,6 @@ public class PlayerController : MonoBehaviour
 
         camRay = playerCam.ScreenPointToRay(Input.mousePosition);   //Makes the ray point in the direction of the mouse.
 
-        rangeOfAttack = transform.forward * attackRange;    /* Could use help with this one Boris, or Eder if you can, basically I was thinking of using this little calculation
-                                                            to create raycast that moves from the players Z axis till it reaches a set range but im stumped, I need this ray because 
-                                                              it will be used to detect whether an enemy is in range to get hit by an attack or not so yeah */
-
         Debug.DrawRay(camRay.origin, camRay.direction * rayLength, Color.red);  //Creates a visual Representation of the raycast.
 
         if (groundPlane.Raycast(camRay, out rayLength))     //Forbids the ray from going beyond the set ground plane.
@@ -57,5 +61,25 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));  //Makes player game object rotate in the direction of the raycast.
+
+        if (Physics.Raycast(attackRangeOrigin, directionOfAttack, out RaycastHit hitInfo, attackRange, enemyLayer))
+        {
+            // If the ray hits an object, you can access the hit information via hitInfo
+            Debug.Log("Raycast hit: " + hitInfo.collider.name);
+
+            isInRange = true;
+
+            if(isInRange == true & Input.GetMouseButtonDown(0))
+            {
+                Debug.Log("Enemy has been attacked");
+            }
+        }
+
+        // Update attack range origin and direction of attack each frame
+        attackRangeOrigin = transform.position;
+        directionOfAttack = transform.forward;
+
+        // Visualize the ray in the Scene view
+        Debug.DrawRay(attackRangeOrigin, directionOfAttack * attackRange, Color.yellow);
     }
 }
