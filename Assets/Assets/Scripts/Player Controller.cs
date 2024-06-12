@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
 {
 
     public Camera playerCam;
-
     public GameObject player;
 
     public float moveSpeed;
@@ -28,6 +27,15 @@ public class PlayerController : MonoBehaviour
     private Vector3 attackRangeOrigin;
     private Vector3 directionOfAttack;
 
+    public float dashDistance = 5f; // Distance to dash
+    public float dashTime = 0.2f; // Duration of dash
+    public float dashCooldown = 1f; // Cooldown between dashes
+
+    private Rigidbody rb;
+    private bool isDashing = false;
+    private Vector3 dashDirection;
+    private float lastDashTime;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +43,8 @@ public class PlayerController : MonoBehaviour
         player = GameObject.Find("Player");
 
         enemyLayer = LayerMask.GetMask("Enemy");
+
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -81,5 +91,39 @@ public class PlayerController : MonoBehaviour
 
         // Visualize the ray in the Scene view
         Debug.DrawRay(attackRangeOrigin, directionOfAttack * attackRange, Color.yellow);
+
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time - lastDashTime > dashCooldown)
+        {
+            // Perform dash
+            Dash();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (isDashing)
+        {
+            // Move the player along the dash direction
+            rb.MovePosition(transform.position + dashDirection * dashDistance * Time.fixedDeltaTime / dashTime);
+        }
+    }
+
+    void Dash()
+    {
+        // Set dash direction based on player input or current facing direction
+        dashDirection = transform.forward; // For simplicity, using forward direction as dash direction
+
+        // Start dash
+        isDashing = true;
+        lastDashTime = Time.time;
+
+        // Invoke method to stop dash after dash time
+        Invoke("StopDash", dashTime);
+    }
+
+    void StopDash()
+    {
+        // End dash
+        isDashing = false;
     }
 }

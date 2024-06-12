@@ -458,7 +458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCam: {fileID: 154282289}
-  player: {fileID: 0}
+  player: {fileID: 1058084814}
   moveSpeed: 10
   sprintSpeed: 15
   enemyLayer:
@@ -466,6 +466,9 @@ MonoBehaviour:
     m_Bits: 0
   rayLength: 0
   attackRange: 6
+  dashDistance: 5
+  dashTime: 0.2
+  dashCooldown: 1
 --- !u!1 &1869226545
 GameObject:
   m_ObjectHideFlags: 0
