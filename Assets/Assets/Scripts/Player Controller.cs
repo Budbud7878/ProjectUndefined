@@ -19,15 +19,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int numberOfRays = 5; // Number of rays in the spread
     [SerializeField] private float spreadAngle = 45f; // Spread angle in degrees
 
-    [SerializeField] private float physicalDamage;
+    public float physicalDamage = 10f; //For now lets say this is how much damage hand to hand combat does.
+    [SerializeField] private float damageTaken; //Variable might need to be moved.
     [SerializeField] private float attackDelay;
     [SerializeField] private float attackSpeed; //Useless until we implement animations.
     [SerializeField] private float specialCd; //Useless also.
     [SerializeField] private float currentHealth;
     [SerializeField] private float maxHealth;
+    [SerializeField] private float invulnerabilityTimer;
+
 
     private bool isInRange;
     private bool isHit;
+    private bool isVulnerable = true;
 
     private Plane groundPlane;
 
@@ -56,6 +60,8 @@ public class PlayerController : MonoBehaviour
         enemyLayer = LayerMask.GetMask("Enemy");
 
         rb = GetComponent<Rigidbody>();
+
+        currentHealth = maxHealth;
     }
 
     // Update is called once per frame
@@ -88,7 +94,8 @@ public class PlayerController : MonoBehaviour
         directionOfAttack = transform.forward;
 
 
-        AttackRangeDetection();
+        // This method is still in progress: Attack(physicalDamage);
+        PlayerHealthLogic(damageTaken); 
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time - lastDashTime > dashCooldown)
         {
@@ -125,7 +132,7 @@ public class PlayerController : MonoBehaviour
         isDashing = false;
     }
 
-    void AttackRangeDetection()
+    void Attack(float DamageInflicted)
     {
         float halfAngle = spreadAngle / 2f;
         for (int i = 0; i < numberOfRays; i++)
@@ -144,7 +151,9 @@ public class PlayerController : MonoBehaviour
 
                 if (isInRange == true & Input.GetMouseButtonDown(0))
                 {
-                    Debug.Log("Enemy has been attacked");
+                     
+
+                    Debug.Log("Player has inflicted" + physicalDamage + "on" + hitInfo.collider.name);
                 }
             }
 
@@ -153,12 +162,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void PlayerHealth(float damageTaken)
+    void PlayerHealthLogic(float DamageTaken) //Game manager should alter what damage was taken depending on enemy.
     {
-        if (isHit == true)
+        if (isHit == true & isVulnerable == false) //If player is hit and invulnerability timer has run out then player will take damage.
         {
-            currentHealth -= damageTaken;
+            currentHealth -= DamageTaken;
+            if (currentHealth < 0f)
+            {
+                Death();
+            }
         }
+    }
+
+    void Death()
+    {
+        Destroy(gameObject);  //It'll only destroy the player game object for now, to be changed later.
     }
 
 }
