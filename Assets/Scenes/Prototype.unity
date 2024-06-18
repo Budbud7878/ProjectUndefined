@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -651,6 +651,17 @@ MonoBehaviour:
     m_Bits: 0
   rayLength: 0
   attackRange: 6
+  numberOfRays: 5
+  spreadAngle: 45
+  physicalDamage: 10
+  pD2: 20
+  damageTaken: 0
+  attackDelay: 0
+  attackSpeed: 0
+  specialCd: 0
+  currentHealth: 0
+  maxHealth: 0
+  invulnerabilityTimer: 0
   dashDistance: 5
   dashTime: 0.2
   dashCooldown: 1
@@ -1141,6 +1152,7 @@ GameObject:
   - component: {fileID: 1900721535}
   - component: {fileID: 1900721534}
   - component: {fileID: 1900721538}
+  - component: {fileID: 1900721539}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -1248,6 +1260,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1058084819}
   followSpeed: 5
+--- !u!114 &1900721539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1900721533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcf2c96cbd87a2243a8381fdd4dfb101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 0
+  maxHealth: 100
+  damageTaken: 0
+  physicalDamage: 0
+  attackRange: 0
+  attackDelay: 0
+  attackSpeed: 0
+  rayLength: 0
+  numberOfRays: 5
+  spreadAngle: 45
+  isHit: 0
 --- !u!1 &1967859096 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8370695694162617137, guid: 359e05bfa531a3f4380c6009218482b4, type: 3}
