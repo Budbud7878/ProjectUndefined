@@ -5,6 +5,6 @@ using UnityEngine;
 
 public enum DamageTypes
 {
-    punchDamage = 6,
-    slashDamage = 15
+    punchDamage,
+    slashDamage
 }

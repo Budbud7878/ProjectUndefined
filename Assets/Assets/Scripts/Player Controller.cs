@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float spreadAngle = 45f; // Spread angle in degrees
 
     public float physicalDamage = 10f; //For now lets say this is how much damage hand to hand combat does.
+    public float pD2 = 20f;
     [SerializeField] private float damageTaken; //Variable might need to be moved.
     [SerializeField] private float attackDelay;
     [SerializeField] private float attackSpeed; //Useless until we implement animations.
@@ -93,6 +94,7 @@ public class PlayerController : MonoBehaviour
         attackRangeOrigin = transform.position;
         directionOfAttack = transform.forward;
 
+        Attack();
 
         // This method is still in progress: Attack(physicalDamage);
         PlayerHealthLogic(damageTaken); 
@@ -132,7 +134,7 @@ public class PlayerController : MonoBehaviour
         isDashing = false;
     }
 
-    void Attack(float DamageInflicted)
+    void Attack()
     {
         float halfAngle = spreadAngle / 2f;
         for (int i = 0; i < numberOfRays; i++)
@@ -148,12 +150,23 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Raycast hit: " + hitInfo.collider.name);
 
                 isInRange = true;
+                TheShattered shattered = hitInfo.collider.GetComponent<TheShattered>();
 
-                if (isInRange == true & Input.GetMouseButtonDown(0))
+                if (isInRange == true)
                 {
-                     
 
-                    Debug.Log("Player has inflicted" + physicalDamage + "on" + hitInfo.collider.name);
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        shattered.isHit = true;
+                        shattered.WhatAttack(DamageTypes.punchDamage);
+                    }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        shattered.isHit = true;
+                        shattered.WhatAttack(DamageTypes.slashDamage);
+                    }
+                    Debug.Log("Player has inflicted " + physicalDamage + " on " + hitInfo.collider.name);
+
                 }
             }
 
