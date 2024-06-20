@@ -7,8 +7,7 @@ public class TheShattered : MonoBehaviour
 
     [SerializeField] private float currentHealth;
     [SerializeField] private float maxHealth;
-    [SerializeField] private float damageTaken;
-    [SerializeField] private float physicalDamage;
+    public float simpleAttack = 15f;
     [SerializeField] private float attackRange;
     [SerializeField] private float attackDelay;
     [SerializeField] private float attackSpeed;

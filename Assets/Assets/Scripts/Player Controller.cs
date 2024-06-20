@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private bool isDashing = false;
     private Vector3 dashDirection;
+    private EnemyTypes enemyType;
+    private TheShattered theShattered;
     private float lastDashTime;
     #endregion
 
@@ -61,6 +63,7 @@ public class PlayerController : MonoBehaviour
         enemyLayer = LayerMask.GetMask("Enemy");
 
         rb = GetComponent<Rigidbody>();
+        theShattered = GetComponent<TheShattered>();
 
         currentHealth = maxHealth;
     }
@@ -97,7 +100,7 @@ public class PlayerController : MonoBehaviour
         Attack();
 
         // This method is still in progress: Attack(physicalDamage);
-        PlayerHealthLogic(damageTaken); 
+        PlayerHealthLogic(); 
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time - lastDashTime > dashCooldown)
         {
@@ -175,15 +178,32 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void PlayerHealthLogic(float DamageTaken) //Game manager should alter what damage was taken depending on enemy.
+    void PlayerHealthLogic() //Game manager should alter what damage was taken depending on enemy.
     {
-        if (isHit == true & isVulnerable == false) //If player is hit and invulnerability timer has run out then player will take damage.
+
+        Debug.Log("Current Health: " + currentHealth + ", Max Health: " + maxHealth);
+        Debug.Log("Is Hit: " + isHit + ", Is In Range: " + isInRange + ", Enemy: " + enemyType);
+
+        switch (enemyType)
         {
-            currentHealth -= DamageTaken;
-            if (currentHealth < 0f)
-            {
-                Death();
-            }
+            case EnemyTypes.theShattered:
+
+                if (isHit == true & isVulnerable == false)
+                {
+                    currentHealth -= theShattered.simpleAttack;
+                    if (currentHealth <= 0f)
+                    {
+                        Death();
+                    }
+                }
+
+                break;
+
+            default:
+
+                Debug.Log("Unknown damage type");
+
+                break;
         }
     }
 
