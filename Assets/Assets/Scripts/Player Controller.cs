@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -31,8 +32,8 @@ public class PlayerController : MonoBehaviour
 
 
     private bool isInRange;
-    private bool isHit;
-    private bool isVulnerable = true;
+    public bool isHit;
+    public bool isVulnerable = true;
 
     private Plane groundPlane;
 
@@ -53,6 +54,11 @@ public class PlayerController : MonoBehaviour
     private TheShattered theShattered;
     private float lastDashTime;
     #endregion
+
+    void Awake()
+    {
+        currentHealth = maxHealth;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -99,13 +105,18 @@ public class PlayerController : MonoBehaviour
 
         Attack();
 
-        // This method is still in progress: Attack(physicalDamage);
         PlayerHealthLogic(); 
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time - lastDashTime > dashCooldown)
         {
             // Perform dash
             Dash();
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            isVulnerable = false;
         }
     }
 
@@ -188,8 +199,9 @@ public class PlayerController : MonoBehaviour
         {
             case EnemyTypes.theShattered:
 
-                if (isHit == true & isVulnerable == false)
+                if (isHit && isVulnerable && theShattered != null)
                 {
+                    
                     currentHealth -= theShattered.simpleAttack;
                     if (currentHealth <= 0f)
                     {
@@ -205,6 +217,11 @@ public class PlayerController : MonoBehaviour
 
                 break;
         }
+    }
+
+    public void WhatAttacked(EnemyTypes Enemy)
+    {
+        enemyType = Enemy;
     }
 
     void Death()

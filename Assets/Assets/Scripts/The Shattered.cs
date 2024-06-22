@@ -19,6 +19,8 @@ public class TheShattered : MonoBehaviour
     private bool isInRange;
     public bool isHit;
 
+    public LayerMask playerLayer;
+
     private PlayerController pC;
     private DamageTypes damageTypes;
 
@@ -33,12 +35,15 @@ public class TheShattered : MonoBehaviour
         Debug.Log("Start - Current Health: " + currentHealth);
         GameObject playerObject = GameObject.Find("Player");
         pC = playerObject.GetComponent<PlayerController>();
+
+        playerLayer = LayerMask.GetMask("Player");
     }
 
     // Update is called once per frame
     void Update()
     {
         EnemyHealthLogic();
+        Attack();
     }
     public void EnemyHealthLogic()
     {
@@ -89,11 +94,38 @@ public class TheShattered : MonoBehaviour
 
     void Attack()
     {
-               if (isInRange == true)
-               {
-                    
-               }
+        float halfAngle = spreadAngle / 2f;
+        isInRange = false;
+
+        for (int i = 0; i < numberOfRays; i++)
+        {
+            // Calculate the angle for this ray
+            float angle = Mathf.Lerp(-halfAngle, halfAngle, i / (float)(numberOfRays - 1));
+            Vector3 rayDirection = Quaternion.Euler(0, angle, 0) * transform.forward;
+
+            // Perform the raycast
+            if (Physics.Raycast(transform.position, rayDirection, out RaycastHit hitInfo, attackRange, playerLayer))
+            {
+                    isInRange = true;
+                    PlayerController player = hitInfo.collider.GetComponent<PlayerController>();
+
+                if (player != null && isInRange)
+                {
+                    player.isHit = true;
+
+                    if (isHit)
+                    {
+                        player.WhatAttacked(EnemyTypes.theShattered);
+                        
+                    }
+                }
+            }  
+
+            // Visualize the ray in the Scene view
+            Debug.DrawRay(transform.position, rayDirection * attackRange, Color.yellow);
+        }
     }
+
 
     void Death()
     {
