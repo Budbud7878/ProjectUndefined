@@ -9,7 +9,6 @@ public class TheShattered : MonoBehaviour
     [SerializeField] private float maxHealth;
     public float simpleAttack = 15f;
     [SerializeField] private float attackRange;
-    [SerializeField] private float attackDelay;
     [SerializeField] private float attackSpeed;
    
     [SerializeField] private float rayLength;
@@ -32,7 +31,6 @@ public class TheShattered : MonoBehaviour
     }
     void Start()
     {
-        Debug.Log("Start - Current Health: " + currentHealth);
         GameObject playerObject = GameObject.Find("Player");
         pC = playerObject.GetComponent<PlayerController>();
 
@@ -43,12 +41,12 @@ public class TheShattered : MonoBehaviour
     void Update()
     {
         EnemyHealthLogic();
-        Attack();
+       
+            Attack();
+        
     }
     public void EnemyHealthLogic()
     {
-        Debug.Log("Current Health: " + currentHealth + ", Max Health: " + maxHealth);
-        Debug.Log("Is Hit: " + isHit + ", Is In Range: " + isInRange + ", Damage Type: " + damageTypes);
 
         switch (damageTypes)
         {
@@ -96,6 +94,7 @@ public class TheShattered : MonoBehaviour
     {
         float halfAngle = spreadAngle / 2f;
         isInRange = false;
+        
 
         for (int i = 0; i < numberOfRays; i++)
         {
@@ -112,11 +111,12 @@ public class TheShattered : MonoBehaviour
                 if (player != null && isInRange)
                 {
                     player.isHit = true;
-
-                    if (isHit)
+                  
+                    if (player.isHit == true && player.isVulnerable == true)
                     {
+
                         player.WhatAttacked(EnemyTypes.theShattered);
-                        
+                       
                     }
                 }
             }  
@@ -125,7 +125,6 @@ public class TheShattered : MonoBehaviour
             Debug.DrawRay(transform.position, rayDirection * attackRange, Color.yellow);
         }
     }
-
 
     void Death()
     {

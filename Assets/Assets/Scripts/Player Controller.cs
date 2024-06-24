@@ -69,7 +69,9 @@ public class PlayerController : MonoBehaviour
         enemyLayer = LayerMask.GetMask("Enemy");
 
         rb = GetComponent<Rigidbody>();
-        theShattered = GetComponent<TheShattered>();
+
+        GameObject shattered = GameObject.FindWithTag("Shattered");
+        theShattered = shattered.GetComponent<TheShattered>();
 
         currentHealth = maxHealth;
     }
@@ -189,19 +191,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void PlayerHealthLogic() //Game manager should alter what damage was taken depending on enemy.
+    public void PlayerHealthLogic() //Game manager should alter what damage was taken depending on enemy.
     {
-
-        Debug.Log("Current Health: " + currentHealth + ", Max Health: " + maxHealth);
-        Debug.Log("Is Hit: " + isHit + ", Is In Range: " + isInRange + ", Enemy: " + enemyType);
 
         switch (enemyType)
         {
             case EnemyTypes.theShattered:
 
-                if (isHit && isVulnerable && theShattered != null)
+                if (isHit == true && isVulnerable == true)
                 {
-                    
                     currentHealth -= theShattered.simpleAttack;
                     if (currentHealth <= 0f)
                     {
@@ -219,9 +217,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void WhatAttacked(EnemyTypes Enemy)
+    public void WhatAttacked(EnemyTypes newEnemy)
     {
-        enemyType = Enemy;
+        enemyType = newEnemy;
+        Debug.Log("Enemy type is " + enemyType);
     }
 
     void Death()
