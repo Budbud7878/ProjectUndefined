@@ -4,5 +4,6 @@ using UnityEngine;
 
 public enum EnemyTypes
 {
+    controlCheck,
     theShattered
 }

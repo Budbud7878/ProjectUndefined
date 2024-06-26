@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //Assuming this is 3rd-person movement and the default Input Manager configuration is used.
         Vector3 moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
@@ -120,10 +120,7 @@ public class PlayerController : MonoBehaviour
         {
             isVulnerable = false;
         }
-    }
 
-    void FixedUpdate()
-    {
         if (isDashing)
         {
             // Move the player along the dash direction
@@ -206,8 +203,15 @@ public class PlayerController : MonoBehaviour
                         Death();
                     }
                 }
+                isHit = false;
 
                 break;
+
+            case EnemyTypes.controlCheck:
+
+                Debug.Log("Under control check");
+
+                break; 
 
             default:
 
