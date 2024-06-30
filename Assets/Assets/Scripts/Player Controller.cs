@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     public float physicalDamage = 10f; //For now lets say this is how much damage hand to hand combat does.
     public float pD2 = 20f;
     [SerializeField] private float damageTaken; //Variable might need to be moved.
-    [SerializeField] private float attackDelay;
+    [SerializeField] private float attackCooldown;
     [SerializeField] private float attackSpeed; //Useless until we implement animations.
     [SerializeField] private float specialCd; //Useless also.
     [SerializeField] private float currentHealth;
@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     private bool isInRange;
     public bool isHit;
     public bool isVulnerable = true;
+    private bool canAttack = true;
 
     private Plane groundPlane;
 
@@ -149,7 +150,11 @@ public class PlayerController : MonoBehaviour
 
     void Attack()
     {
+        if (!canAttack) return;
+
         float halfAngle = spreadAngle / 2f;
+        isInRange = false;
+
         for (int i = 0; i < numberOfRays; i++)
         {
             // Calculate the angle for this ray
@@ -165,19 +170,20 @@ public class PlayerController : MonoBehaviour
                 isInRange = true;
                 TheShattered shattered = hitInfo.collider.GetComponent<TheShattered>();
 
-                if (isInRange == true)
+                if (isInRange)
                 {
 
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetMouseButtonDown(0) && !shattered.isHit) 
                     {
                         shattered.isHit = true;
                         shattered.WhatAttack(DamageTypes.punchDamage);
+                        StartCoroutine(AttackCooldown());
                     }
-                    if (Input.GetMouseButtonDown(1))
+                   /* if (Input.GetMouseButtonDown(1))
                     {
                         shattered.isHit = true;
                         shattered.WhatAttack(DamageTypes.slashDamage);
-                    }
+                    }*/
                     Debug.Log("Player has inflicted " + physicalDamage + " on " + hitInfo.collider.name);
 
                 }
@@ -219,6 +225,13 @@ public class PlayerController : MonoBehaviour
 
                 break;
         }
+    }
+
+    IEnumerator AttackCooldown()
+    {
+        canAttack = false; // Set flag to prevent attacking
+        yield return new WaitForSeconds(attackCooldown); // Wait for cooldown duration
+        canAttack = true; // Reset flag after cooldown
     }
 
     public void WhatAttacked(EnemyTypes newEnemy)
