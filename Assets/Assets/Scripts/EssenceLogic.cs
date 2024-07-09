@@ -7,10 +7,10 @@ public class EssenceLogic : MonoBehaviour
 
     [SerializeField] private float currentEssence;
     private float maxEssence = 50f;
-    private float refillRate = 1f; // This is just for testing right now. The essence refill rate will be affected by various upgrades and items. Same for the cooldown.
+    private float refillRate = 15f; // This is just for testing right now. The essence refill rate will be affected by various upgrades and items. Same for the cooldown.
     private float fillCooldown = 5f;
 
-    private bool canFill;
+    [SerializeField] private bool canFill = true;
 
     private PlayerController pC;
 
@@ -25,15 +25,6 @@ public class EssenceLogic : MonoBehaviour
     void Update()
     {
         EssenceRefill();
-
-        if(Input.GetKeyDown(KeyCode.L)) 
-        {
-            currentEssence -= 20f;
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            pC.isHit = true;
-        }
     }
 
     void EssenceRefill()
@@ -46,7 +37,6 @@ public class EssenceLogic : MonoBehaviour
 
         if (pC.isHit == true)
         {
-            StartCoroutine(RefillCooldown());
             StopCoroutine(Refill());
         }
         if (currentEssence == maxEssence)
@@ -54,29 +44,30 @@ public class EssenceLogic : MonoBehaviour
             StopCoroutine(Refill());
         }
     }
-    
 
-    IEnumerator RefillCooldown()
+    IEnumerator RefillDelay()
     {
-        yield return new WaitForSeconds(fillCooldown); // Wait for cooldown duration
+        yield return new WaitForSeconds(5f);
+        canFill = true;
     }
+
     IEnumerator Refill()
     {
-       
-        while (currentEssence < maxEssence & !pC.isHit)
+        while (currentEssence < maxEssence && !pC.isHit && canFill)
         {
-            currentEssence += refillRate * Time.deltaTime;
-            yield return new WaitForSeconds(7f);
-        }
+            currentEssence += refillRate;
 
-        if (currentEssence > maxEssence)
-        {
-            currentEssence = maxEssence;
+            canFill = false;
+            StartCoroutine(RefillDelay());
+
+            if (currentEssence >= maxEssence)
+            {
+                currentEssence = maxEssence;
+                break; // Exit the loop if maxEssence is reached
+            }
+            yield return null;
+            Debug.Log("After return");
         }
+        
     }
-
-    /*IEnumerator RefillDelay()
-    {
-        if()
-    }*/
 }
