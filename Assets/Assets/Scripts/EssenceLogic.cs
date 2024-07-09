@@ -5,50 +5,78 @@ using UnityEngine;
 public class EssenceLogic : MonoBehaviour
 {
 
-    private float currentEssence;
+    [SerializeField] private float currentEssence;
     private float maxEssence = 50f;
     private float refillRate = 1f; // This is just for testing right now. The essence refill rate will be affected by various upgrades and items. Same for the cooldown.
     private float fillCooldown = 5f;
 
     private bool canFill;
 
+    private PlayerController pC;
+
     // Start is called before the first frame update
     void Start()
     {
         currentEssence = maxEssence;
+        pC = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        EssenceRefill();
+
+        if(Input.GetKeyDown(KeyCode.L)) 
+        {
+            currentEssence -= 20f;
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            pC.isHit = true;
+        }
     }
 
     void EssenceRefill()
     {
-        if (currentEssence < maxEssence)
+
+        if(!pC.isHit) 
         {
-            
+            StartCoroutine(Refill());
+        }
+
+        if (pC.isHit == true)
+        {
+            StartCoroutine(RefillCooldown());
+            StopCoroutine(Refill());
+        }
+        if (currentEssence == maxEssence)
+        {
+            StopCoroutine(Refill());
         }
     }
     
 
     IEnumerator RefillCooldown()
     {
-        canFill = false;
         yield return new WaitForSeconds(fillCooldown); // Wait for cooldown duration
-        canFill = true;
     }
-    IEnumerator RefillRate()
+    IEnumerator Refill()
     {
-        canFill = true;
-
-        while (currentEssence < maxEssence)
+       
+        while (currentEssence < maxEssence & !pC.isHit)
         {
             currentEssence += refillRate * Time.deltaTime;
-            yield return null;
+            yield return new WaitForSeconds(7f);
         }
 
-        canFill = false;
+        if (currentEssence > maxEssence)
+        {
+            currentEssence = maxEssence;
+        }
     }
+
+    /*IEnumerator RefillDelay()
+    {
+        if()
+    }*/
 }
