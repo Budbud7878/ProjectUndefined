@@ -5,12 +5,13 @@ using UnityEngine;
 public class EssenceLogic : MonoBehaviour
 {
 
-    [SerializeField] private float currentEssence;
+    public float currentEssence;
     private float maxEssence = 50f;
     private float refillRate = 15f; // This is just for testing right now. The essence refill rate will be affected by various upgrades and items. Same for the cooldown.
-    private float fillCooldown = 5f;
+    private float startRefillDelay = 10f;
 
     [SerializeField] private bool canFill = true;
+    [SerializeField] private bool canBegin = false;
 
     private PlayerController pC;
 
@@ -25,6 +26,11 @@ public class EssenceLogic : MonoBehaviour
     void Update()
     {
         EssenceRefill();
+
+        if (Input.GetKeyUp(KeyCode.L))
+        {
+            currentEssence -= 20f;
+        }
     }
 
     void EssenceRefill()
@@ -43,27 +49,43 @@ public class EssenceLogic : MonoBehaviour
         {
             StopCoroutine(Refill());
         }
+        if (currentEssence >= maxEssence)
+        {
+            currentEssence = maxEssence;
+            canBegin = false;
+        }
     }
 
-    IEnumerator RefillDelay()
+    IEnumerator DuringRefillDelay()
     {
         yield return new WaitForSeconds(5f);
         canFill = true;
+    }
+
+    IEnumerator RefillStartDelay()
+    {
+        yield return new WaitForSeconds(startRefillDelay);
+        canBegin = true;
     }
 
     IEnumerator Refill()
     {
         while (currentEssence < maxEssence && !pC.isHit && canFill)
         {
-            currentEssence += refillRate;
+            StartCoroutine(RefillStartDelay());
 
-            canFill = false;
-            StartCoroutine(RefillDelay());
+            if (canBegin)
+            {
+                currentEssence += refillRate;
 
-            if (currentEssence >= maxEssence)
+                canFill = false;
+                StartCoroutine(DuringRefillDelay());
+            }
+
+            if (currentEssence > maxEssence)
             {
                 currentEssence = maxEssence;
-                break; // Exit the loop if maxEssence is reached
+                break;
             }
             yield return null;
             Debug.Log("After return");
