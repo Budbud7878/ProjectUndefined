@@ -54,6 +54,10 @@ public class EssenceLogic : MonoBehaviour
             currentEssence = maxEssence;
             canBegin = false;
         }
+        if (currentEssence < 0f)
+        {
+            currentEssence = 0f;
+        }
     }
 
     IEnumerator DuringRefillDelay()
