@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerCam = GameObject.Find("Main Camera").GetComponent<Camera>();
+        playerCam = GameObject.Find("Camera").GetComponent<Camera>();
         player = GameObject.Find("Player");
 
         enemyLayer = LayerMask.GetMask("Enemy");
