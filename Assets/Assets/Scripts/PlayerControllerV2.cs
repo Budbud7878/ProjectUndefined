@@ -14,10 +14,15 @@ public class PlayerControllerV2 : MonoBehaviour
     private Vector3 Movement;
     [SerializeField] private float NormalSpeed = 4f;
     [SerializeField] private float SprintSpeed = 5.5f;
+    private float horizontal;
+    private float vertical;
     #endregion
 
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
+
         // Find the CameraMovement script
         cameraMovement = FindObjectOfType<CameraMovement>();
 
@@ -29,16 +34,25 @@ public class PlayerControllerV2 : MonoBehaviour
 
     void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        Move();
+
+        // Rotate the player to face the mouse position
+        RotatePlayerTowardsMouse();
+    }
+
+    private void FixedUpdate()
+    {
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
+    }
+
+    void Move()
+    {
 
         Movement = new Vector3(horizontal, 0f, vertical).normalized;
         float speed = Input.GetKey(KeyCode.LeftShift) ? SprintSpeed : NormalSpeed;
 
         transform.position += Movement * speed * Time.deltaTime;
-
-        // Rotate the player to face the mouse position
-        RotatePlayerTowardsMouse();
     }
 
     void RotatePlayerTowardsMouse()
@@ -58,4 +72,6 @@ public class PlayerControllerV2 : MonoBehaviour
         // Smoothly rotate the player towards the target rotation
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
     }
+
+    
 }
