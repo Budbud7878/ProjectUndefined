@@ -8,33 +8,22 @@ public class CameraMovement : MonoBehaviour
     public Vector3 WorldPosition;
     public LayerMask LayerToHit;
     public GameObject Mouse;
+
+
     public Transform Player; // Reference to the player
+
+
     public float MaxDistance = 10f; // Maximum allowed distance from the player
     private Camera activeCamera;
     #endregion
 
     void Start()
     {
-        if (Mouse == null)
-        {
-            Debug.LogError("Mouse GameObject is not assigned. Please assign it in the inspector.");
-        }
-
-        if (Player == null)
-        {
-            Debug.LogError("Player Transform is not assigned. Please assign it in the inspector.");
-        }
-
         // Get the active camera from CinemachineBrain
         CinemachineBrain cinemachineBrain = Camera.main.GetComponent<CinemachineBrain>();
         if (cinemachineBrain != null)
         {
             activeCamera = cinemachineBrain.OutputCamera;
-        }
-
-        if (activeCamera == null)
-        {
-            Debug.LogError("Active camera not found. Ensure your CinemachineBrain is properly set up.");
         }
     }
 

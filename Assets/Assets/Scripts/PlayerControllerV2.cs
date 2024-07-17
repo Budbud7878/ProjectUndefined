@@ -1,57 +1,63 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using System;
 
 public class PlayerControllerV2 : MonoBehaviour
 {
     #region VARIABLES
-    private CameraMovement cameraMovement;
 
-    public Rigidbody rb;
+    [SerializeField] private Cooldown cooldown;
+    private CameraMovement cameraMovement => FindObjectOfType<CameraMovement>();
+    public Rigidbody rb => GetComponent<Rigidbody>();
 
     private Vector3 Movement;
-    [SerializeField] private float NormalSpeed = 4f;
-    [SerializeField] private float SprintSpeed = 5.5f;
+    [SerializeField] private float NormalSpeed = 15f;
+    [SerializeField] private float SprintSpeed = 20f;
     private float horizontal;
     private float vertical;
+    private bool rightclick;
+
+    private bool isDashing = false;
+    public float dashDistance = 5f; // Example dash distance
+    public float dashDuration = 0.5f; // Example dash duration
+
     #endregion
+
+    #region MONOBEHAVIOUR_METHODS
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-
-        // Find the CameraMovement script
-        cameraMovement = FindObjectOfType<CameraMovement>();
-
-        if (cameraMovement == null)
-        {
-            Debug.LogError("CameraMovement script not found. Ensure it is attached to a GameObject in the scene.");
-        }
     }
 
     void Update()
     {
+        horizontal = Input.GetAxisRaw("Horizontal");
+        vertical = Input.GetAxisRaw("Vertical");
+        rightclick = Input.GetMouseButtonDown(1);
+
         Move();
-
-        // Rotate the player to face the mouse position
         RotatePlayerTowardsMouse();
+
+        if ((horizontal != 0 || vertical != 0) && rightclick && !isDashing && !cooldown.IsCoolingDown)
+        {
+            isDashing = true;
+            StartCoroutine(PerformDash());
+        }
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
+        // Any fixed update logic you might add
     }
+
+    #endregion
+
+    #region PLAYER_ACTIONS
 
     void Move()
     {
-
         Movement = new Vector3(horizontal, 0f, vertical).normalized;
         float speed = Input.GetKey(KeyCode.LeftShift) ? SprintSpeed : NormalSpeed;
-
         transform.position += Movement * speed * Time.deltaTime;
     }
 
@@ -59,19 +65,38 @@ public class PlayerControllerV2 : MonoBehaviour
     {
         if (cameraMovement == null) return;
 
-        // Get the position of the mouse in the world
         Vector3 mousePosition = cameraMovement.WorldPosition;
-
-        // Calculate the direction from the player to the mouse position
         Vector3 direction = (mousePosition - transform.position).normalized;
-        direction.y = 0; // Keep the rotation in the horizontal plane
+        direction.y = 0;
 
-        // Calculate the target rotation
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-
-        // Smoothly rotate the player towards the target rotation
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
     }
 
-    
+    #endregion
+
+    #region DASH_METHOD
+
+    IEnumerator PerformDash()
+    {
+        float dashSpeed = dashDistance / dashDuration;
+
+        Vector3 dashDirection = Movement.normalized; // Dash direction based on current movement input
+        Vector3 dashTarget = transform.position + dashDirection * dashDistance;
+
+        rb.velocity = dashDirection * dashSpeed; // Apply initial dash velocity
+
+        float startTime = Time.time;
+
+        while (Time.time < startTime + dashDuration)
+        {
+            yield return null;
+        }
+
+        rb.velocity = Vector3.zero; // Stop the player after the dash
+        isDashing = false; // Reset after dash is complete
+        cooldown.StartCoolDown(); // Start cooldown after dash
+    }
+
+    #endregion
 }
