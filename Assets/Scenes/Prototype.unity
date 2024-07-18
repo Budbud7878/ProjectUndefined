@@ -843,6 +843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 584520f6ac0b52a4ca31b15b661d97c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GRAVITY: 6
   cooldown:
     CoolDownTime: 3
   NormalSpeed: 50
@@ -850,9 +851,9 @@ MonoBehaviour:
   smoothTime: 0.1
   groundLayer:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 0
   dashDistance: 5
-  dashDuration: 0.2
+  dashDuration: 0.1
 --- !u!114 &1340559425
 MonoBehaviour:
   m_ObjectHideFlags: 0
