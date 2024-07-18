@@ -151,9 +151,9 @@ Transform:
   m_GameObject: {fileID: 17275935}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.17, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1340559420}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -206,7 +206,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -1114199533890271507, guid: 359e05bfa531a3f4380c6009218482b4, type: 3}
+  - {fileID: 2100000, guid: 17f8460484509024086a84b739db3330, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -366,7 +366,7 @@ GameObject:
   - component: {fileID: 281714594}
   - component: {fileID: 281714593}
   - component: {fileID: 281714592}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: floor big floor area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -738,7 +738,7 @@ Transform:
   m_GameObject: {fileID: 1008188964}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: -0, z: -0, w: 0.92387956}
-  m_LocalPosition: {x: -0.9899998, y: 11.24107, z: -7.071068}
+  m_LocalPosition: {x: -0.9899998, y: 4.9910684, z: -18.531067}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -773,7 +773,7 @@ Transform:
   m_GameObject: {fileID: 1340559419}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.99, y: 3, z: 0}
+  m_LocalPosition: {x: -0.99, y: -2.08, z: -11.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -807,7 +807,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 2
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!136 &1340559423
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -845,8 +845,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown:
     CoolDownTime: 3
-  NormalSpeed: 15
-  SprintSpeed: 20
+  NormalSpeed: 50
+  SprintSpeed: 70
+  smoothTime: 0.1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   dashDistance: 5
   dashDuration: 0.2
 --- !u!114 &1340559425
@@ -934,7 +938,7 @@ Transform:
   m_GameObject: {fileID: 1429133893}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38268343, y: -0, z: -0, w: 0.92387956}
-  m_LocalPosition: {x: -0.9899998, y: 11.24107, z: -7.071068}
+  m_LocalPosition: {x: -0.9899998, y: 4.9910684, z: -18.531067}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1183,6 +1187,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 560876119}
     m_Modifications:
+    - target: {fileID: 103078455489755514, guid: dd2ef4814ab54374da47edc6c7a9c46f, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 376225692485885652, guid: dd2ef4814ab54374da47edc6c7a9c46f, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 671538459455834269, guid: dd2ef4814ab54374da47edc6c7a9c46f, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1195,6 +1207,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f0fe6f413a79beb49b37495a3f3f0614, type: 2}
+    - target: {fileID: 1801756891117220262, guid: dd2ef4814ab54374da47edc6c7a9c46f, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2764709239075627578, guid: dd2ef4814ab54374da47edc6c7a9c46f, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1219,6 +1235,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f0fe6f413a79beb49b37495a3f3f0614, type: 2}
+    - target: {fileID: 6341343338812173301, guid: dd2ef4814ab54374da47edc6c7a9c46f, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8272588392311520672, guid: dd2ef4814ab54374da47edc6c7a9c46f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -21.595207
@@ -1271,6 +1291,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f0fe6f413a79beb49b37495a3f3f0614, type: 2}
+    - target: {fileID: 9217997393977219236, guid: dd2ef4814ab54374da47edc6c7a9c46f, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
