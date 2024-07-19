@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8689f8aa533687447860f1e833c6ad95, type: 3}
   m_Name: Worn Sword
   m_EditorClassIdentifier: 
-  weaponName: 
-  damage: 0
-  attackSpeed: 0
-  maxUpgradeSlots: 0
+  weaponName: Worn Sword
+  damage: 10
+  attackSpeed: 15
+  weaponRange: 4
+  maxUpgradeSlots: 2
   upgrades: []

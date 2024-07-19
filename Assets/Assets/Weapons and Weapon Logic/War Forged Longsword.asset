@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15fb0bf02b352c443a7d0973fe69f485, type: 3}
   m_Name: War Forged Longsword
   m_EditorClassIdentifier: 
-  weaponName: 
-  damage: 0
-  attackSpeed: 0
-  maxUpgradeSlots: 0
+  weaponName: War Forged Longsword
+  damage: 25
+  attackSpeed: 9
+  weaponRange: 6
+  maxUpgradeSlots: 3
   upgrades: []
