@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8689f8aa533687447860f1e833c6ad95, type: 3}
+  m_Script: {fileID: 0}
   m_Name: Worn Sword
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::WornSword
   weaponName: Worn Sword
   damage: 10
   attackSpeed: 15
-  weaponRange: 4
+  weaponRange: 0
   maxUpgradeSlots: 2
   upgrades: []
