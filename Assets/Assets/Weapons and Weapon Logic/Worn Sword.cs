@@ -29,7 +29,7 @@ public class WornSword : MonoBehaviour
             {
                 if (currentCooldown <= 0f)
                 {
-                    onAttack.Invoke();
+                    onAttack?.Invoke();
                     currentCooldown = attackCooldown;
                 }
             }
