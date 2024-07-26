@@ -42,41 +42,17 @@ public class TheShattered : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        EnemyHealthLogic();
         Attack();
     }
 
-    public void EnemyHealthLogic()
+    public void EnemyHealthLogic(float damage)
     {
-        switch (damageTypes)
+        currentHealth -= damage;
+        Debug.Log("Enemy took damage. Current health: " + currentHealth);
+
+        if (currentHealth <= 0)
         {
-            case DamageTypes.punchDamage:
-                if (isHit == true)
-                {
-                    currentHealth -= pC.physicalDamage;
-                    if (currentHealth <= 0f)
-                    {
-                        Death();
-                    }
-                    isHit = false; // Reset isHit after applying damage
-                }
-                break;
-
-            case DamageTypes.slashDamage:
-                if (isHit == true)
-                {
-                    currentHealth -= pC.pD2;
-                    if (currentHealth <= 0f)
-                    {
-                        Death();
-                    }
-                    isHit = false; // Reset isHit after applying damage
-                }
-                break;
-
-            default:
-                Debug.Log("Unknown damage type");
-                break;
+            Death();
         }
     }
 
