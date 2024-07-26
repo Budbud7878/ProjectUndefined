@@ -6,12 +6,12 @@ using UnityEngine.Events;
 public class WornSword : MonoBehaviour
 {
 
-    public UnityEvent onAttack;
-    public float attackCooldown;
+    [SerializeField] private UnityEvent onAttack;
 
-    public float currentCooldown;
+    private float attackCooldown;
+    private float currentCooldown;
 
-    public bool canAttack;
+    private bool canAttack;
 
     // Start is called before the first frame update
     void Start()
@@ -33,8 +33,6 @@ public class WornSword : MonoBehaviour
                     currentCooldown = attackCooldown;
                 }
             }
-        }
-         
-
+        }   
     }
 }
