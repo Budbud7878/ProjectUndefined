@@ -26,6 +26,9 @@ public class PlayerControllerV2 : MonoBehaviour
     public float dashDistance = 5f; // Example dash distance
     public float dashDuration = 0.5f; // Example dash duration
 
+    [SerializeField] private float currentHealth;
+    [SerializeField] private float maxHealth;
+
     #endregion
 
     #region MONOBEHAVIOUR_METHODS
@@ -44,6 +47,8 @@ public class PlayerControllerV2 : MonoBehaviour
         highFrictionMaterial.staticFriction = 1f;
         highFrictionMaterial.frictionCombine = PhysicMaterialCombine.Maximum;
         capsuleCollider.material = highFrictionMaterial;
+
+        currentHealth = maxHealth;
     }
 
     void Update()
@@ -150,6 +155,21 @@ public class PlayerControllerV2 : MonoBehaviour
         rb.velocity = Vector3.zero; // Stop the player after the dash
         isDashing = false; // Reset after dash is complete
         cooldown.StartCoolDown(); // Start cooldown after dash
+    }
+
+    #endregion
+
+    #region HEALTH_METHOD
+
+    public void Health(float damage)
+    {
+        currentHealth -= damage;
+        Debug.Log("Player took damage. Current health: " + currentHealth);
+
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     #endregion

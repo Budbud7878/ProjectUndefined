@@ -106,10 +106,6 @@ public class PlayerController : MonoBehaviour
         attackRangeOrigin = transform.position;
         directionOfAttack = transform.forward;
 
-        Attack();
-
-        PlayerHealthLogic(); 
-
         if (Input.GetKeyDown(KeyCode.Space) && Time.time - lastDashTime > dashCooldown)
         {
             // Perform dash
@@ -140,91 +136,6 @@ public class PlayerController : MonoBehaviour
 
         // Invoke method to stop dash after dash time
         Invoke("StopDash", dashTime);
-    }
-
-    void StopDash()
-    {
-        // End dash
-        isDashing = false;
-    }
-
-    void Attack()
-    {
-        if (!canAttack) return;
-
-        float halfAngle = spreadAngle / 2f;
-        isInRange = false;
-
-        for (int i = 0; i < numberOfRays; i++)
-        {
-            // Calculate the angle for this ray
-            float angle = Mathf.Lerp(-halfAngle, halfAngle, i / (float)(numberOfRays - 1));
-            Vector3 rayDirection = Quaternion.Euler(0, angle, 0) * directionOfAttack;
-
-            // Perform the raycast
-            if (Physics.Raycast(attackRangeOrigin, rayDirection, out RaycastHit hitInfo, attackRange, enemyLayer))
-            {     
-                // If the ray hits an object, you can access the hit information via hitInfo
-                Debug.Log("Raycast hit: " + hitInfo.collider.name);
-
-                isInRange = true;
-                TheShattered shattered = hitInfo.collider.GetComponent<TheShattered>();
-
-                if (isInRange)
-                {
-
-                    if (Input.GetMouseButtonDown(0) && !shattered.isHit) 
-                    {
-                        shattered.isHit = true;
-                        shattered.WhatAttack(DamageTypes.punchDamage);
-                        StartCoroutine(AttackCooldown());
-                    }
-                   /* if (Input.GetMouseButtonDown(1))
-                    {
-                        shattered.isHit = true;
-                        shattered.WhatAttack(DamageTypes.slashDamage);
-                    }*/
-                    Debug.Log("Player has inflicted " + physicalDamage + " on " + hitInfo.collider.name);
-
-                }
-            }
-
-            // Visualize the attack ray in the Scene view
-            Debug.DrawRay(attackRangeOrigin, rayDirection * attackRange, Color.yellow);
-        }
-    }
-
-    public void PlayerHealthLogic() //Game manager should alter what damage was taken depending on enemy.
-    {
-
-        switch (enemyType)
-        {
-            case EnemyTypes.theShattered:
-
-                if (isHit == true && isVulnerable == true)
-                {
-                    currentHealth -= theShattered.simpleAttack;
-                    if (currentHealth <= 0f)
-                    {
-                        Death();
-                    }
-                }
-                isHit = false;
-
-                break;
-
-            case EnemyTypes.controlCheck:
-
-                Debug.Log("Under control check");
-
-                break; 
-
-            default:
-
-                Debug.Log("Unknown damage type");
-
-                break;
-        }
     }
 
     IEnumerator AttackCooldown()
